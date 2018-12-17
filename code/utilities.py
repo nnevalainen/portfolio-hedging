@@ -39,10 +39,10 @@ def clean_sheet(sheet):
     sheet[strikes].apply(lambda col: col[col > 1] /1000)
     
     # rename strike columns with normalized strikes
-    sheet = sheet.rename(columns={key: key/100 for key in list(strikes)})
+    sheet = sheet.rename(columns={key: key/1000 for key in list(strikes)})
     
     # set date as index
-    sheet = sheet.set_index(sheet.date)
+    sheet = sheet.set_index(sheet.mat)
     
     E = nstrikes             # strike prices
     S = sheet.s_price        # stock prices
