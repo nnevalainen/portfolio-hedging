@@ -86,3 +86,30 @@ def vega_hedge(maturity_1, maturity_2, strike, spot, q, sigma):
 	eta = - vega_bs / vega_rep
 
 	return alpha, eta
+
+def delta_hedge_butterfly(maturity, strikes, spot, q, sigma):
+	'''
+	Consider you have a butterfly centered around strikes[1] with ITM and OTM call options at indexes
+	0 and 2 respectively. This funcion returns you the total number of underlying to hedge the position.
+	'''
+
+	# Calculate the values
+	long_ITM = delta_hedge(maturity, strikes[0], spot, q, sigma)
+	long_OTM = delta_hedge(maturity, strikes[2], spot, q, sigma)
+	short_ATM = delta_hedge(maturity, strikes[1], spot, q, sigma)
+
+	return long_ITM + long_OTM - 2 * short_ATM
+
+def vega_hedge_butterfly(maturity_1, maturity_2, strikes, spot, q, sigma):
+	'''
+	Consider you have a butterfly centered around strikes[1] with ITM and OTM call options at indexes
+	0 and 2 respectively. This funcion returns you the total number of underlying to hedge the position
+	for both alpha (the underlying) and eta (repeating call of longer maturity)
+	'''
+
+	# Calculate the values
+	alpha_long_ITM, eta_long_ITM = delta_hedge(maturity_1, maturity_2, strikes[0], spot, q, sigma)
+	alpha_long_OTM, eta_long_OTM = delta_hedge(maturity_1, maturity_2, strikes[2], spot, q, sigma)
+	alpha_short_ATM, eta_short_ATM = delta_hedge(maturity_1, maturity_2, strikes[1], spot, q, sigma)
+
+	return (alpha_long_ITM + alpha_long_OTM - 2 * alpha_short_ATM), (eta_long_ITM +eta_long_OTM - 2 *eta_short_ATM)
