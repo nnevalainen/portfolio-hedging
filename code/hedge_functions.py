@@ -108,8 +108,8 @@ def vega_hedge_butterfly(maturity_1, maturity_2, strikes, spot, q, sigma):
 	'''
 
 	# Calculate the values
-	alpha_long_ITM, eta_long_ITM = delta_hedge(maturity_1, maturity_2, strikes[0], spot, q, sigma)
-	alpha_long_OTM, eta_long_OTM = delta_hedge(maturity_1, maturity_2, strikes[2], spot, q, sigma)
-	alpha_short_ATM, eta_short_ATM = delta_hedge(maturity_1, maturity_2, strikes[1], spot, q, sigma)
+	alpha_long_ITM, eta_long_ITM = vega_hedge(maturity_1, maturity_2, strikes[0], spot, q, sigma)
+	alpha_long_OTM, eta_long_OTM = vega_hedge(maturity_1, maturity_2, strikes[2], spot, q, sigma)
+	alpha_short_ATM, eta_short_ATM = vega_hedge(maturity_1, maturity_2, strikes[1], spot, q, sigma)
 
-	return (alpha_long_ITM + alpha_long_OTM - 2 * alpha_short_ATM), (eta_long_ITM +eta_long_OTM - 2 *eta_short_ATM)
+	return (alpha_long_ITM + alpha_long_OTM - 2 * alpha_short_ATM), eta_long_ITM, eta_long_OTM, - 2 * eta_short_ATM
