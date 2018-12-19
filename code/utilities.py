@@ -36,22 +36,28 @@ def clean_sheet(sheet):
         column[column > 0] /= 1000
         
     # remove call outliers
-    sheet[strikes].apply(lambda col: col[col > 1] /1000)
-    
+    def replace_greater_than_one(row):
+        row[row > 1] = row[row > 1] / 1000
+        return row
+
+    sheet[strikes] = sheet[strikes].apply(replace_greater_than_one, axis=1)
+
     # rename strike columns with normalized strikes
     sheet = sheet.rename(columns={key: key/1000 for key in list(strikes)})
     
     # set date as index
     sheet = sheet.set_index(sheet.mat)
     
-    E = nstrikes             # strike prices
-    S = sheet.s_price        # stock prices
-    Cobs = sheet.iloc[:, E]  # call prices
-    r = sheet.r              # risk-free interest rates
-    mat = sheet.mat          # days to maturity
-    T = sheet.time           # years to maturity
+# Not used at the moment
     
-    return sheet, (mat, T, S, Cobs, E, r)
+#     E = nstrikes             # strike prices
+#     S = sheet.s_price        # stock prices
+#     Cobs = sheet.iloc[:, E]  # call prices
+#     r = sheet.r              # risk-free interest rates
+#     mat = sheet.mat          # days to maturity
+#     T = sheet.time           # years to maturity
+    
+    return sheet
 
 def format_sheet(sheet):
     """
